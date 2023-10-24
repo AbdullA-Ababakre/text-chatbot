@@ -1,62 +1,35 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 
-const MessageItem = ({ message, pngFile, isLast }) => {
+// const MessageItem = ({ message, pngFile, isLast }) => {
+//   return (
+//     <div className={`flex flex-col ${isLast ? "flex-grow" : ""}`}>
+//       <div className="flex mb-4">
+//         <div className="rounded mr-4 h-10 w-10 relative overflow-hidden">
+//           <Image
+//             src={botType === "user" ? userImage : botImage}
+//             alt={`${botType}'s profile`}
+//             width={32}
+//             height={32}
+//             className="rounded"
+//             priority
+//             unoptimized
+//           />
+//         </div>
+//         <p
+//           className={botType === "user" ? "user" : "bot"}
+//           style={{ maxWidth: "90%" }}
+//         >
+//           {message.text}
+//         </p>
+//       </div>
+//     </div>
+//   );
+// };
+
+const ResultWithSources = ({ messages, pngFile, maxMsgs, botType, isLast }) => {
   const userImage = "/assets/images/green-square.png";
   const botImage = `/assets/images/${pngFile}.png`;
-  const [showSources, setShowSources] = useState(false);
-
-  return (
-    <div className={`flex flex-col ${isLast ? "flex-grow" : ""}`}>
-      <div className="flex mb-4">
-        <div className="rounded mr-4 h-10 w-10 relative overflow-hidden">
-          <Image
-            src={message.type === "user" ? userImage : botImage}
-            alt={`${message.type}'s profile`}
-            width={32}
-            height={32}
-            className="rounded"
-            priority
-            unoptimized
-          />
-        </div>
-        <p
-          className={message.type === "user" ? "user" : "bot"}
-          style={{ maxWidth: "90%" }}
-        >
-          {message.text}
-        </p>
-      </div>
-
-      {message.sourceDocuments && (
-        <div className="mb-6">
-          <button
-            className="text-gray-600 text-sm font-bold"
-            onClick={() => setShowSources(!showSources)}
-          >
-            Source Documents {showSources ? "(Hide)" : "(Show)"}
-          </button>
-          {showSources &&
-            message.sourceDocuments.map((document, docIndex) => (
-              <div key={docIndex}>
-                <h3 className="text-gray-600 text-sm font-bold">
-                  Source {docIndex + 1}:
-                </h3>
-                <p className="text-gray-800 text-sm mt-2">
-                  {document.pageContent}
-                </p>
-                <pre className="text-xs text-gray-500 mt-2">
-                  {JSON.stringify(document.metadata, null, 2)}
-                </pre>
-              </div>
-            ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const ResultWithSources = ({ messages, pngFile, maxMsgs }) => {
   const messagesContainerRef = useRef();
 
   useEffect(() => {
@@ -76,10 +49,37 @@ const ResultWithSources = ({ messages, pngFile, maxMsgs }) => {
         messages.length < maxMsgToScroll && "justify-end"
       }`}
     >
-      {messages &&
+      <pre
+        className={botType === "user" ? "user" : "bot"}
+        style={{ maxWidth: "90%" }}
+      >
+        {messages}
+      </pre>
+      {/* {messages &&
         messages.map((message, index) => (
           <MessageItem key={index} message={message} pngFile={pngFile} />
-        ))}
+          <div className={`flex flex-col  ${isLast ? "flex-grow" : ""} `}>
+            <div className="flex mb-4">
+              <div className="rounded mr-4 h-10 w-10 relative overflow-hidden">
+                <Image
+                  src={botType === "user" ? userImage : botImage}
+                  alt={`${botType}'s profile`}
+                  width={32}
+                  height={32}
+                  className="rounded"
+                  priority
+                  unoptimized
+                />
+              </div>
+              <pre
+              className={botType === "user" ? "user" : "bot"}
+              style={{ maxWidth: "90%" }}
+              >
+                {message.text}
+              </pre>
+            </div>
+          </div>
+        ))} */}
     </div>
   );
 };

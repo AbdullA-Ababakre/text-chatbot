@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ResultWithSources from "../components/ResultWithSources";
 import PromptBox from "../components/PromptBox";
 import Button from "../components/Button";
@@ -14,55 +14,46 @@ import "../globals.css";
 const PDFLoader = () => {
   // Managing prompt, messages, and error states with useState
   const [prompt, setPrompt] = useState("How to get rich?");
-  const [messages, setMessages] = useState([
-    {
-      text: "Hi, I'm a Naval AI. What would you like to know?",
-      type: "bot",
-    },
-  ]);
+  const [messages, setMessages] = useState(
+    "Hi, I'm a Naval AI. What would you like to know?"
+  );
   const [error, setError] = useState("");
   const [source, setSource] = useState(null);
+  const [botType, setBotType] = useState("bot");
 
   // This function updates the prompt value when the user types in the prompt box
+  //
   const handlePromptChange = (e) => {
     setPrompt(e.target.value);
   };
 
-  // This function handles the submission of the form when the user hits 'Enter' or 'Submit'
-  // It sends a GET request to the provided endpoint with the current prompt as the query
   const handleSubmit = async (endpoint) => {
     try {
-      // console.log(`sending ${prompt}`);
-      // console.log(`using ${endpoint}`);
-
-      // A GET request is sent to the backend
       const response = await fetch(`/api/${endpoint}`, {
         method: "GET",
       });
 
-      // The response from the backend is parsed as JSON
       const searchRes = await response.json();
-      setError(""); // Clear any existing error messages
+      setError("");
     } catch (error) {
       console.log(error);
       setError(error.message);
     }
   };
 
-  // This function handles the submission of the user's prompt when the user hits 'Enter' or 'Submit'
-  // It sends a POST request to the provided endpoint with the current prompt in the request body
+  const processToken = (token) => {
+    return token.replace(/\\n/g, "\n").replace(/\"/g, "");
+  };
+
   const handleSubmitPrompt = async (endpoint) => {
     try {
       setPrompt("");
 
-      // Push the user's message into the messages array
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: prompt, type: "user", sourceDocuments: null },
-      ]);
+      setMessages(prompt);
 
-      // A POST request is sent to the backend with the current prompt in the request body
-      const response = await fetch(`/api/${endpoint}`, {
+      setBotType("user");
+
+      await fetch(`/api/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,30 +61,40 @@ const PDFLoader = () => {
         body: JSON.stringify({ input: prompt }),
       });
 
-      // Throw an error if the HTTP status is not OK
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // close existing sources
+      if (source) {
+        source.close();
       }
+      // Establish an SSE connection
+      const newSource = new EventSource(`/api/${endpoint}`);
+      setSource(newSource);
 
-      // Parse the response from the backend as JSON
-      const searchRes = await response.json();
+      newSource.addEventListener("newToken", (event) => {
+        const token = processToken(event.data);
+        setMessages((prevData) => prevData + token);
 
-      // Push the response into the messages array
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          text: searchRes.result.text,
-          type: "bot",
-          sourceDocuments: searchRes.result.sourceDocuments,
-        },
-      ]);
+        setBotType("bot");
+      });
 
-      setError(""); // Clear any existing error messages
+      newSource.addEventListener("end", () => {
+        newSource.close();
+      });
+
+      setError("");
     } catch (error) {
-      // console.log(error);
       setError(error.message);
     }
   };
+
+  // Clean up the EventSource on component unmount
+  useEffect(() => {
+    // stuff is gonna happen
+    return () => {
+      if (source) {
+        source.close();
+      }
+    };
+  }, [source]);
 
   // The component returns a two column layout with various child components
   return (
@@ -121,7 +122,11 @@ const PDFLoader = () => {
         }
         rightChildren={
           <>
-            <ResultWithSources messages={messages} pngFile="pdf" />
+            <ResultWithSources
+              messages={messages}
+              pngFile="pdf"
+              botType={botType}
+            />
             <PromptBox
               prompt={prompt}
               handlePromptChange={handlePromptChange}
