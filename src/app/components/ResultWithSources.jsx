@@ -1,35 +1,32 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import { AssistantChatCard } from "./assistantChat";
+import { UserChatCard } from "./userChat";
 
-// const MessageItem = ({ message, pngFile, isLast }) => {
-//   return (
-//     <div className={`flex flex-col ${isLast ? "flex-grow" : ""}`}>
-//       <div className="flex mb-4">
-//         <div className="rounded mr-4 h-10 w-10 relative overflow-hidden">
-//           <Image
-//             src={botType === "user" ? userImage : botImage}
-//             alt={`${botType}'s profile`}
-//             width={32}
-//             height={32}
-//             className="rounded"
-//             priority
-//             unoptimized
-//           />
-//         </div>
-//         <p
-//           className={botType === "user" ? "user" : "bot"}
-//           style={{ maxWidth: "90%" }}
-//         >
-//           {message.text}
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
-
-const ResultWithSources = ({ messages, pngFile, maxMsgs, botType, isLast }) => {
+const Icon = ({ pngFile }) => {
   const userImage = "/assets/images/green-square.png";
   const botImage = `/assets/images/${pngFile}.png`;
+
+  return (
+    <div className="rounded mr-4 h-10 w-10 relative overflow-hidden">
+      <Image
+        src={botType === "user" ? userImage : botImage}
+        alt={`${botType}'s profile`}
+        width={32}
+        height={32}
+        className="rounded"
+        priority
+        unoptimized
+      />
+    </div>
+  );
+};
+
+const TextContent = ({ message }) => {
+  return <p className="text-sm text-muted-foreground">{message.text}</p>;
+};
+
+const ResultWithSources = ({ messages, pngFile, maxMsgs, isLast }) => {
   const messagesContainerRef = useRef();
 
   useEffect(() => {
@@ -49,37 +46,14 @@ const ResultWithSources = ({ messages, pngFile, maxMsgs, botType, isLast }) => {
         messages.length < maxMsgToScroll && "justify-end"
       }`}
     >
-      <pre
-        className={botType === "user" ? "user" : "bot"}
-        style={{ maxWidth: "90%" }}
-      >
-        {messages}
-      </pre>
-      {/* {messages &&
-        messages.map((message, index) => (
-          <MessageItem key={index} message={message} pngFile={pngFile} />
-          <div className={`flex flex-col  ${isLast ? "flex-grow" : ""} `}>
-            <div className="flex mb-4">
-              <div className="rounded mr-4 h-10 w-10 relative overflow-hidden">
-                <Image
-                  src={botType === "user" ? userImage : botImage}
-                  alt={`${botType}'s profile`}
-                  width={32}
-                  height={32}
-                  className="rounded"
-                  priority
-                  unoptimized
-                />
-              </div>
-              <pre
-              className={botType === "user" ? "user" : "bot"}
-              style={{ maxWidth: "90%" }}
-              >
-                {message.text}
-              </pre>
-            </div>
-          </div>
-        ))} */}
+      {messages &&
+        messages.map((message, index) =>
+          message.type === "bot" ? (
+            <AssistantChatCard key={index} text={message.text} />
+          ) : (
+            <UserChatCard key={index} text={message.text} />
+          )
+        )}
     </div>
   );
 };

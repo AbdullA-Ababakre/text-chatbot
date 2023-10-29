@@ -14,15 +14,16 @@ import "../globals.css";
 const PDFLoader = () => {
   // Managing prompt, messages, and error states with useState
   const [prompt, setPrompt] = useState("How to get rich?");
-  const [messages, setMessages] = useState(
-    "Hi, I'm a Naval AI. What would you like to know?"
-  );
+  const [messages, setMessages] = useState([
+    {
+      text: "Hi, I'm a Naval AI. What would you like to know?",
+      type: "bot",
+    },
+  ]);
   const [error, setError] = useState("");
   const [source, setSource] = useState(null);
-  const [botType, setBotType] = useState("bot");
 
   // This function updates the prompt value when the user types in the prompt box
-  //
   const handlePromptChange = (e) => {
     setPrompt(e.target.value);
   };
@@ -49,9 +50,9 @@ const PDFLoader = () => {
     try {
       setPrompt("");
 
-      setMessages(prompt);
-
-      setBotType("user");
+      const userMessage = { type: "user", text: prompt.trim() };
+      const bottMessage = { type: "bot", text: "" };
+      setMessages([...messages, userMessage, bottMessage]);
 
       await fetch(`/api/${endpoint}`, {
         method: "POST",
@@ -69,11 +70,22 @@ const PDFLoader = () => {
       const newSource = new EventSource(`/api/${endpoint}`);
       setSource(newSource);
 
+      let currentStreamedText = "";
       newSource.addEventListener("newToken", (event) => {
         const token = processToken(event.data);
-        setMessages((prevData) => prevData + token);
+        currentStreamedText += token;
 
-        setBotType("bot");
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages];
+          const lastMessageIndex = newMessages.length - 1;
+
+          newMessages[lastMessageIndex] = {
+            ...newMessages[lastMessageIndex],
+            text: currentStreamedText,
+          };
+
+          return newMessages;
+        });
       });
 
       newSource.addEventListener("end", () => {
@@ -95,6 +107,10 @@ const PDFLoader = () => {
       }
     };
   }, [source]);
+
+  useEffect(() => {
+    console.log("messages11", messages);
+  }, [messages]);
 
   // The component returns a two column layout with various child components
   return (
@@ -122,11 +138,7 @@ const PDFLoader = () => {
         }
         rightChildren={
           <>
-            <ResultWithSources
-              messages={messages}
-              pngFile="pdf"
-              botType={botType}
-            />
+            <ResultWithSources messages={messages} pngFile="pdf" />
             <PromptBox
               prompt={prompt}
               handlePromptChange={handlePromptChange}
