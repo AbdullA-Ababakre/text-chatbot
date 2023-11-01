@@ -16,7 +16,7 @@ const PDFLoader = () => {
   const [prompt, setPrompt] = useState("How to get rich?");
   const [messages, setMessages] = useState([
     {
-      text: "Hi, I'm a Naval AI. What would you like to know?",
+      text: "Hi, I'm a Abdulla. Founder of the myaiclone. What I can assist you",
       type: "bot",
     },
   ]);

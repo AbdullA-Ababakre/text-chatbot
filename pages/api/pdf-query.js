@@ -4,6 +4,7 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { OpenAI } from "langchain/llms/openai";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
 import SSE from "express-sse";
+import { PromptTemplate } from "langchain/prompts";
 
 const sse = new SSE();
 
@@ -37,7 +38,18 @@ const handleSSEStreaming = async (input) => {
     returnSourceDocuments: true,
   });
 
-  chain.call({ query: input }).then(() => {
+  // prompts
+  const promptTemplate = new PromptTemplate({
+    template: `Assume you are a AI clone of a person.This person is a software engineer called Abdulla who just moved to USA recently and trying to build a company.
+    According to the data that given which we crawled form Abdulla's social media, personal notes and all his personal datas,answer this question: {question}`,
+    inputVariables: ["question"],
+  });
+
+  const formattedPrompt = await promptTemplate.format({
+    question: input,
+  });
+
+  chain.call({ query: formattedPrompt }).then(() => {
     sse.send(null, "end"); // Send end message to indicate completion
   });
 };

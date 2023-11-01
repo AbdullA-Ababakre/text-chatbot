@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     // console.log("Uploading book");
     /** STEP ONE: LOAD DOCUMENT */
     const bookPath =
-      "/Users/abdullaababakre/Desktop/text-chatbot/data/document_loaders/bitcoin.pdf";
+      "/Users/abdullaababakre/Desktop/text-chatbot/data/document_loaders/AbdullaData.pdf";
     const loader = new PDFLoader(bookPath);
 
     const docs = await loader.load();
@@ -54,8 +54,7 @@ export default async function handler(req, res) {
       pineconeIndex,
     });
 
-    // console.log("Successfully uploaded to DB");
-    // Modify output as needed
+
     return res.status(200).json({
       result: `Uploaded to Pinecone! Before splitting: ${docs.length}, After splitting: ${splitDocs.length}`,
     });
