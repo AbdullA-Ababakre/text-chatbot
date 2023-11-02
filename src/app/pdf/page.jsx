@@ -30,7 +30,7 @@ const PDFLoader = () => {
 
   const handleSubmit = async (endpoint) => {
     try {
-      const response = await fetch(`/api/${endpoint}`, {
+      const response = await fetch(`https://text-chatbot.vercel.app/api/${endpoint}`, {
         method: "GET",
         headers: {
           Accept: "application/json",
