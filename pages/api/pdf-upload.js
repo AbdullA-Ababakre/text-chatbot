@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     // console.log("Uploading book");
     /** STEP ONE: LOAD DOCUMENT */
     const bookPath =
-      "/Users/abdullaababakre/Desktop/text-chatbot/data/document_loaders/AbdullaData.pdf";
+      "/Users/abdullaababakre/Desktop/text-chatbot/data/document_loaders/bitcoin.pdf";
     const loader = new PDFLoader(bookPath);
 
     const docs = await loader.load();
