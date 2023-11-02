@@ -8,8 +8,7 @@ import {
 } from "./card"
 
 export function AssistantChatCard({ text = "Hi, how can I help you?" }) {
-  
-  console.log("text111",text);
+
 
   return (
     <div className="mb-[25px] ml-[25px] mt-[20px]">

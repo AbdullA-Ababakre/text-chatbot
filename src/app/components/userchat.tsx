@@ -1,11 +1,11 @@
-import * as React from "react"
+import * as React from "react";
 
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./card"
+} from "./card";
 
 export function UserChatCard({ text = "" }) {
   return (
