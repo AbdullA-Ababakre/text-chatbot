@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const loader = new PDFLoader(bookPath);
 
     const docs = await loader.load();
-    // console.log("docs",docs);
+    console.log("docs11", docs);
 
     if (docs.length === 0) {
       // console.log("No documents found.");
@@ -53,7 +53,6 @@ export default async function handler(req, res) {
     await PineconeStore.fromDocuments(reducedDocs, new OpenAIEmbeddings(), {
       pineconeIndex,
     });
-
 
     return res.status(200).json({
       result: `Uploaded to Pinecone! Before splitting: ${docs.length}, After splitting: ${splitDocs.length}`,

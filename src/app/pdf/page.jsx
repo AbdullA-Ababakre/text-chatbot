@@ -32,7 +32,12 @@ const PDFLoader = () => {
     try {
       const response = await fetch(`/api/${endpoint}`, {
         method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
       });
+
+      console.log("responseBookSubmit1", response);
 
       const searchRes = await response.json();
       setError("");
