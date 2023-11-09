@@ -9,10 +9,8 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     // console.log("Uploading book");
     /** STEP ONE: LOAD DOCUMENT */
-    const bookPath =
-      "/Users/abdullaababakre/Desktop/text-chatbot/data/document_loaders/AbdullaData.pdf";
+    const bookPath = "./data/document_loaders/AbdullaData.pdf";
     const loader = new PDFLoader(bookPath);
-
 
     const docs = await loader.load();
     console.log("docs11", docs);
