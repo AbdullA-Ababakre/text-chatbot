@@ -113,10 +113,6 @@ const PDFLoader = () => {
     };
   }, [source]);
 
-  useEffect(() => {
-    console.log("messages11", messages);
-  }, [messages]);
-
   // The component returns a two column layout with various child components
   return (
     <>
