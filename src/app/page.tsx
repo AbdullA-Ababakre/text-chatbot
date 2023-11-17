@@ -97,25 +97,6 @@ const PDFLoader = () => {
     <>
       <Title emoji="💬" headingText="PDF-GPT" />
       <TwoColumnLayout
-        leftChildren={
-          <>
-            <PageHeader
-              heading="Ask Naval Anything"
-              boldText="How to get rich? How to be happy?"
-              description="This tool will
-            let you ask anything contained in a PDF document. This tool uses
-            Embeddings, Pinecone, VectorDBQAChain, and VectorStoreAgents. Please click the upload book first before use "
-            />
-            <ButtonContainer>
-              <Button
-                handleSubmit={handleSubmit}
-                endpoint="pdf-upload"
-                buttonText="Upload Book 📚"
-                className="Button"
-              />
-            </ButtonContainer>
-          </>
-        }
         rightChildren={
           <>
             <ResultWithSources messages={messages} pngFile="pdf" />
