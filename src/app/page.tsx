@@ -3,12 +3,8 @@
 import React, { useState } from "react";
 import ResultWithSources from "./components/ResultWithSources";
 import PromptBox from "./components/PromptBox";
-import Button from "./components/Button";
-import PageHeader from "./components/PageHeader";
-import Title from "./components/Title";
-import TwoColumnLayout from "./components/TwoColumnLayout";
-import ButtonContainer from "./components/ButtonContainer";
 import "./globals.css";
+import "./page.css";
 
 const PDFLoader = () => {
   const [prompt, setPrompt] = useState("How to get rich?");
@@ -24,23 +20,8 @@ const PDFLoader = () => {
     setPrompt(e.target.value);
   };
 
-  const handleSubmit = async (endpoint: string) => {
-    try {
-      const response = await fetch(`/api/${endpoint}`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
-      });
 
-      const searchRes = await response.json();
-      setError("");
-    } catch (error: any) {
-      setError(error.message);
-    }
-  };
-
-  const handleSubmitPrompt = async (endpoint: any) => {
+  const handleSubmitPrompt = async (endpoint: string) => {
     try {
       setPrompt("");
 
@@ -60,7 +41,7 @@ const PDFLoader = () => {
               data: {
                 question: prompt,
                 id: "c586c8e7-3a5d-48dc-9bc4-035060758f35",
-                userId: "farza001",
+                userId: "abdulla001",
               },
             }),
           }
@@ -90,28 +71,62 @@ const PDFLoader = () => {
     }
   };
 
-
+  const handlePromptSampleClick = (samplePrompt: string) => {
+    handleSubmitPrompt(samplePrompt);
+  };
 
   // The component returns a two column layout with various child components
   return (
     <>
-      <Title emoji="💬" headingText="PDF-GPT" />
-      <TwoColumnLayout
-        rightChildren={
-          <>
-            <ResultWithSources messages={messages} />
-            <PromptBox
-              prompt={prompt}
-              handlePromptChange={handlePromptChange}
-              handleSubmit={() => handleSubmitPrompt("/pdf-query")}
-              placeHolderText={"How to get rich?"}
-              error={error}
-              buttonText={"buttonText"} disableButton={true} labelText={"LabelText"} />
-          </>
-        }
-      />
+      <div className="chat-container">
+        <div className="chat-header-container">
+          <img
+            className="chat-icon-logo"
+            src="/assets/images/chatbotLogo.svg"
+            height={30}
+            width={30}
+          />
+          <p>myAiClone</p>
+        </div>
+        <ResultWithSources messages={messages} />
+        <PromptBox
+          prompt={prompt}
+          handlePromptChange={handlePromptChange}
+          handleSubmit={() => handleSubmitPrompt("/pdf-query")}
+          placeHolderText={"How to get rich?"}
+          error={error}
+          buttonText={"buttonText"}
+          disableButton={true}
+          labelText={"LabelText"}
+        />
+        <button
+          onClick={() =>
+            handlePromptSampleClick("What are you currently working on?")
+          }
+          className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+        >
+          What are you currently working on?
+        </button>
+
+        <button
+          onClick={() => handlePromptSampleClick("what is your passion?")}
+          className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+        >
+          what is your passion?
+        </button>
+
+        <button
+          onClick={() => handlePromptSampleClick("where are you from?")}
+          className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+        >
+          where are you from?
+        </button>
+      </div>
     </>
   );
 };
 
 export default PDFLoader;
+
+
+
