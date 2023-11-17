@@ -21,7 +21,6 @@ const PDFLoader = () => {
     },
   ]);
   const [error, setError] = useState("");
-  const [source, setSource] = useState(null);
 
   // This function updates the prompt value when the user types in the prompt box
   const handlePromptChange = (e) => {
@@ -43,10 +42,6 @@ const PDFLoader = () => {
       console.log(error);
       setError(error.message);
     }
-  };
-
-  const processToken = (token) => {
-    return token.replace(/\\n/g, "\n").replace(/\"/g, "");
   };
 
   const handleSubmitPrompt = async (endpoint) => {
@@ -92,7 +87,6 @@ const PDFLoader = () => {
       } catch (error) {
         console.log("Error from HandleSubmit: ", toString(error));
       }
-
 
       setError("");
     } catch (error) {
