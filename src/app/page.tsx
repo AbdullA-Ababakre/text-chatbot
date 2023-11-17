@@ -63,7 +63,7 @@ const Home = () => {
         console.log("Error from HandleSubmit: ", error);
       }
 
-      setPrompt(query);
+      setPrompt(query.trim());
       setError("");
     } catch (error: any) {
       setError(error.message);
@@ -74,7 +74,6 @@ const Home = () => {
     handleSubmitPrompt(samplePrompt);
   };
 
-  // The component returns a two column layout with various child components
   return (
     <>
       <div className="chat-container">
