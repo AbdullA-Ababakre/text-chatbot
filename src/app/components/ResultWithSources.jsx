@@ -26,7 +26,7 @@ const TextContent = ({ message }) => {
   return <p className="text-sm text-muted-foreground">{message.text}</p>;
 };
 
-const ResultWithSources = ({ messages, pngFile, maxMsgs, isLast }) => {
+const ResultWithSources = ({ messages,maxMsgs}) => {
   const messagesContainerRef = useRef();
 
   useEffect(() => {
