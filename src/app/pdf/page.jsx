@@ -37,8 +37,6 @@ const PDFLoader = () => {
         },
       });
 
-      console.log("responseBookSubmit1", response);
-
       const searchRes = await response.json();
       setError("");
     } catch (error) {
@@ -59,43 +57,42 @@ const PDFLoader = () => {
       const bottMessage = { type: "bot", text: "" };
       setMessages([...messages, userMessage, bottMessage]);
 
-      await fetch(`/api/${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ input: prompt }),
-      });
+      try {
+        fetch(
+          "https://us-central1-tablesmart-e4593.cloudfunctions.net/helloWorld?=",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: {
+                question: prompt,
+                id: "c586c8e7-3a5d-48dc-9bc4-035060758f35",
+                userId: "farza001",
+              },
+            }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            setMessages((prevMessages) => {
+              const newMessages = [...prevMessages];
+              const lastMessageIndex = newMessages.length - 1;
 
-      // close existing sources
-      if (source) {
-        source.close();
+              newMessages[lastMessageIndex] = {
+                ...newMessages[lastMessageIndex],
+                text: data.data.answer,
+              };
+
+              return newMessages;
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      } catch (error) {
+        console.log("Error from HandleSubmit: ", toString(error));
       }
-      // Establish an SSE connection
-      const newSource = new EventSource(`/api/${endpoint}`);
-      setSource(newSource);
 
-      let currentStreamedText = "";
-      newSource.addEventListener("newToken", (event) => {
-        const token = processToken(event.data);
-        currentStreamedText += token;
-
-        setMessages((prevMessages) => {
-          const newMessages = [...prevMessages];
-          const lastMessageIndex = newMessages.length - 1;
-
-          newMessages[lastMessageIndex] = {
-            ...newMessages[lastMessageIndex],
-            text: currentStreamedText,
-          };
-
-          return newMessages;
-        });
-      });
-
-      newSource.addEventListener("end", () => {
-        newSource.close();
-      });
 
       setError("");
     } catch (error) {
@@ -103,15 +100,7 @@ const PDFLoader = () => {
     }
   };
 
-  // Clean up the EventSource on component unmount
-  useEffect(() => {
-    // stuff is gonna happen
-    return () => {
-      if (source) {
-        source.close();
-      }
-    };
-  }, [source]);
+
 
   // The component returns a two column layout with various child components
   return (

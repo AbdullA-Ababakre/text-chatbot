@@ -48,8 +48,6 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
-  console.log("props111",props);
-  console.log("classname11",className);
   return (
     <p
       ref={ref}
