@@ -26,7 +26,7 @@ const TextContent = ({ message }) => {
   return <p className="text-sm text-muted-foreground">{message.text}</p>;
 };
 
-const ResultWithSources = ({ messages,maxMsgs}) => {
+const ResultWithSources = ({ messages}) => {
   const messagesContainerRef = useRef();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const ResultWithSources = ({ messages,maxMsgs}) => {
   }, [messages]);
 
   // E.g. Before we reach the max messages, we should add the justify-end property, which pushes messages to the bottom
-  const maxMsgToScroll = maxMsgs || 5;
+  const maxMsgToScroll =  5;
 
   return (
     <div

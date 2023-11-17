@@ -99,14 +99,14 @@ const PDFLoader = () => {
       <TwoColumnLayout
         rightChildren={
           <>
-            <ResultWithSources messages={messages} pngFile="pdf" />
+            <ResultWithSources messages={messages}  />
             <PromptBox
               prompt={prompt}
               handlePromptChange={handlePromptChange}
               handleSubmit={() => handleSubmitPrompt("/pdf-query")}
               placeHolderText={"How to get rich?"}
-              error={error}
-            />
+              error={error} 
+              buttonText={"buttonText"} disableButton={true} labelText={"LabelText"}            />
           </>
         }
       />
