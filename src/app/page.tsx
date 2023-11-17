@@ -6,8 +6,8 @@ import PromptBox from "./components/PromptBox";
 import "./globals.css";
 import "./page.css";
 
-const PDFLoader = () => {
-  const [prompt, setPrompt] = useState("How to get rich?");
+const Home = () => {
+  const [prompt, setPrompt] = useState("What is the myaiclone project?");
   const [messages, setMessages] = useState([
     {
       text: "Hi, I'm a Abdulla. Founder of the myaiclone. What I can assist you? Can I assist you more ?",
@@ -21,11 +21,9 @@ const PDFLoader = () => {
   };
 
 
-  const handleSubmitPrompt = async (endpoint: string) => {
+  const handleSubmitPrompt = async (query: string) => {
     try {
-      setPrompt("");
-
-      const userMessage = { type: "user", text: prompt.trim() };
+      const userMessage = { type: "user", text: query.trim() };
       const bottMessage = { type: "bot", text: "" };
       setMessages([...messages, userMessage, bottMessage]);
 
@@ -39,7 +37,7 @@ const PDFLoader = () => {
             },
             body: JSON.stringify({
               data: {
-                question: prompt,
+                question: query,
                 id: "c586c8e7-3a5d-48dc-9bc4-035060758f35",
                 userId: "abdulla001",
               },
@@ -65,6 +63,7 @@ const PDFLoader = () => {
         console.log("Error from HandleSubmit: ", error);
       }
 
+      setPrompt(query);
       setError("");
     } catch (error: any) {
       setError(error.message);
@@ -92,8 +91,8 @@ const PDFLoader = () => {
         <PromptBox
           prompt={prompt}
           handlePromptChange={handlePromptChange}
-          handleSubmit={() => handleSubmitPrompt("/pdf-query")}
-          placeHolderText={"How to get rich?"}
+          handleSubmit={() => handleSubmitPrompt("What is the myaiclone project?")}
+          placeHolderText={"What is the myaiclone project?"}
           error={error}
           buttonText={"buttonText"}
           disableButton={true}
@@ -126,7 +125,7 @@ const PDFLoader = () => {
   );
 };
 
-export default PDFLoader;
+export default Home;
 
 
 
