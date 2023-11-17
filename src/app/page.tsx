@@ -20,7 +20,7 @@ const PDFLoader = () => {
   ]);
   const [error, setError] = useState("");
 
-  const handlePromptChange = (e) => {
+  const handlePromptChange = (e:any) => {
     setPrompt(e.target.value);
   };
 
