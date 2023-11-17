@@ -20,11 +20,11 @@ const PDFLoader = () => {
   ]);
   const [error, setError] = useState("");
 
-  const handlePromptChange = (e:any) => {
+  const handlePromptChange = (e: any) => {
     setPrompt(e.target.value);
   };
 
-  const handleSubmit = async (endpoint:string) => {
+  const handleSubmit = async (endpoint: string) => {
     try {
       const response = await fetch(`/api/${endpoint}`, {
         method: "GET",
@@ -35,12 +35,12 @@ const PDFLoader = () => {
 
       const searchRes = await response.json();
       setError("");
-    } catch (error:any) {
+    } catch (error: any) {
       setError(error.message);
     }
   };
 
-  const handleSubmitPrompt = async (endpoint:any) => {
+  const handleSubmitPrompt = async (endpoint: any) => {
     try {
       setPrompt("");
 
@@ -79,13 +79,13 @@ const PDFLoader = () => {
               return newMessages;
             });
           })
-          .catch((error:any) => console.error("Error:", error));
-      } catch (error:any) {
+          .catch((error: any) => console.error("Error:", error));
+      } catch (error: any) {
         console.log("Error from HandleSubmit: ", error);
       }
 
       setError("");
-    } catch (error:any) {
+    } catch (error: any) {
       setError(error.message);
     }
   };
@@ -99,14 +99,14 @@ const PDFLoader = () => {
       <TwoColumnLayout
         rightChildren={
           <>
-            <ResultWithSources messages={messages}  />
+            <ResultWithSources messages={messages} />
             <PromptBox
               prompt={prompt}
               handlePromptChange={handlePromptChange}
               handleSubmit={() => handleSubmitPrompt("/pdf-query")}
               placeHolderText={"How to get rich?"}
-              error={error} 
-              buttonText={"buttonText"} disableButton={true} labelText={"LabelText"}            />
+              error={error}
+              buttonText={"buttonText"} disableButton={true} labelText={"LabelText"} />
           </>
         }
       />
