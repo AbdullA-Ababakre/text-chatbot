@@ -81,7 +81,7 @@ const PDFLoader = () => {
             });
           })
           .catch((error) => console.error("Error:", error));
-      } catch (error) {
+      } catch (error:any) {
         console.log("Error from HandleSubmit: ", toString(error));
       }
 
