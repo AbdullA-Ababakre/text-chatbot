@@ -24,7 +24,7 @@ const PDFLoader = () => {
     setPrompt(e.target.value);
   };
 
-  const handleSubmit = async (endpoint:any) => {
+  const handleSubmit = async (endpoint:string) => {
     try {
       const response = await fetch(`/api/${endpoint}`, {
         method: "GET",
