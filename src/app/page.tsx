@@ -35,8 +35,7 @@ const PDFLoader = () => {
 
       const searchRes = await response.json();
       setError("");
-    } catch (error) {
-      console.log(error);
+    } catch (error:any) {
       setError(error.message);
     }
   };
@@ -80,7 +79,7 @@ const PDFLoader = () => {
               return newMessages;
             });
           })
-          .catch((error) => console.error("Error:", error));
+          .catch((error:any) => console.error("Error:", error));
       } catch (error:any) {
         console.log("Error from HandleSubmit: ", toString(error));
       }
