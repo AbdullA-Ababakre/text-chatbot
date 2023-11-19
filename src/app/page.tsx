@@ -95,7 +95,7 @@ const Home = () => {
           prompt={prompt}
           handlePromptChange={handlePromptChange}
           handleSubmit={() =>
-            handleSubmitPrompt("What is the myaiclone project?")
+            handleSubmitPrompt(prompt)
           }
           placeHolderText={"What is the myaiclone project?"}
           error={error}
