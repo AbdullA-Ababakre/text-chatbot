@@ -7,8 +7,8 @@ export function AssistantChatCard({
   assistantName = "Assistant",
 }) {
   return (
-    <div className="mb-[25px] ml-[25px] mt-[20px]">
-      <Card className="w-[350px]">
+    <div className="mb-[25px] lg:ml-[25px] md:ml-[15px] mt-[20px]">
+      <Card className="md:w-[350px] lg:md:w-[350px]">
         <CardHeader>
           <CardTitle>{assistantName}</CardTitle>
           <CardDescription>{text}</CardDescription>

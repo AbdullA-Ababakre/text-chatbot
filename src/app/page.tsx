@@ -103,28 +103,30 @@ const Home = () => {
           disableButton={true}
           labelText={""}
         />
-        <button
-          onClick={() =>
-            handlePromptSampleClick("What are you currently working on?")
-          }
-          className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
-        >
-          What are you currently working on?
-        </button>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button
+            onClick={() =>
+              handlePromptSampleClick("What are you currently working on?")
+            }
+            className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+          >
+            What are you currently working on?
+          </button>
 
-        <button
-          onClick={() => handlePromptSampleClick("what is your passion?")}
-          className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
-        >
-          what is your passion?
-        </button>
+          <button
+            onClick={() => handlePromptSampleClick("what is your passion?")}
+            className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+          >
+            what is your passion?
+          </button>
 
-        <button
-          onClick={() => handlePromptSampleClick("where are you from?")}
-          className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
-        >
-          where are you from?
-        </button>
+          <button
+            onClick={() => handlePromptSampleClick("where are you from?")}
+            className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+          >
+            where are you from?
+          </button>
+        </div>
       </div>
     </>
   );
