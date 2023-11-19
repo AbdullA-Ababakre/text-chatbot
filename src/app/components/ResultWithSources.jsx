@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { AssistantChatCard } from "./assistantChat";
 import { UserChatCard } from "./userChat";
-import "./ResultWithSources.css";
+import Styles from "./ResultWithSources.module.css";
 
 const Icon = ({ pngFile }) => {
   const userImage = "/assets/images/green-square.png";
@@ -24,7 +24,7 @@ const Icon = ({ pngFile }) => {
 };
 
 const TextContent = ({ message }) => {
-  return <p className="text-sm text-muted-foreground">{message.text}</p>;
+  return <p className="Styles.textContent">{message.text}</p>;
 };
 
 const ResultWithSources = ({ messages, loading = false }) => {
@@ -39,14 +39,13 @@ const ResultWithSources = ({ messages, loading = false }) => {
   return (
     <div
       ref={messagesContainerRef}
-      className={`bg-white p-10 overflow-y-auto flex flex-col space-y-4 chat-container-content`}
+      className={Styles.chat_container_content}
     >
       {messages &&
         messages.map((message, index) => {
           var latestResponse = index === messages.length - 1;
           var loadingMessage = latestResponse && loading;
 
-          console.log(latestResponse, index, message, loadingMessage);
           return message.type === "bot" ? (
             <AssistantChatCard
               key={index}

@@ -5,7 +5,7 @@ import ResultWithSources from "./components/ResultWithSources";
 import PromptBox from "./components/PromptBox";
 import "./globals.css";
 import "./page.css";
-1;
+
 const Home = () => {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
