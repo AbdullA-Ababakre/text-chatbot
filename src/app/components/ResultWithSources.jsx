@@ -36,14 +36,10 @@ const ResultWithSources = ({ messages, loading = false }) => {
     }
   }, [messages]);
 
-  const maxMsgToScroll = 5;
-
   return (
     <div
       ref={messagesContainerRef}
-      className={`bg-white p-10 overflow-y-auto flex flex-col space-y-4 ${
-        messages.length < maxMsgToScroll && "justify-end"
-      } chat-container-content`}
+      className={`bg-white p-10 overflow-y-auto flex flex-col space-y-4 chat-container-content`}
     >
       {messages &&
         messages.map((message, index) => {

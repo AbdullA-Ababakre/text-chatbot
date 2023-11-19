@@ -1,0 +1,13 @@
+.icon-logo {
+  margin: 6px;
+  width: 1rem;
+}
+
+.icon-container {
+  height: 3rem;
+  cursor: pointer;
+}
+
+.icon-container:hover {
+  background-color: aliceblue;
+}

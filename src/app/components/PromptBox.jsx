@@ -1,5 +1,6 @@
 import React from "react";
 import { sourceCodePro } from "../styles/fonts";
+import "./PrompotBox.css";
 
 const PromptBox = ({
   prompt,
@@ -18,7 +19,7 @@ const PromptBox = ({
   };
   return (
     <>
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-4 gap-2">
         {/* {labelText && (
           <label htmlFor="" className="mr-4">
             {labelText}
@@ -33,6 +34,19 @@ const PromptBox = ({
           placeholder={placeHolderText || "Enter your prompt"}
           className="mt-1 w-full py-2 px-4 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded shadow"
         />
+
+        <div className="py-2 px-2 mt-1 bg-white h-full icon-container">
+          <img
+            className="icon-logo icon-logo-video"
+            src="/assets/images/video-solid.svg"
+          />
+        </div>
+        <div className="py-2 px-2 mt-1 bg-white h-full icon-container">
+          <img
+            className="icon-logo icon-logo-phone"
+            src="/assets/images/phone-solid.svg"
+          />
+        </div>
 
         {/* {!disableButton && (
           <button
