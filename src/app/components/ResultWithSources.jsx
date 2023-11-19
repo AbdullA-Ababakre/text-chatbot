@@ -2,13 +2,14 @@ import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { AssistantChatCard } from "./assistantChat";
 import { UserChatCard } from "./userChat";
+import "./ResultWithSources.css";
 
 const Icon = ({ pngFile }) => {
   const userImage = "/assets/images/green-square.png";
   const botImage = `/assets/images/${pngFile}.png`;
 
   return (
-    <div className="rounded mr-4 h-10 w-10 relative overflow-hidden">
+    <div className="">
       <Image
         src={botType === "user" ? userImage : botImage}
         alt={`${botType}'s profile`}
@@ -26,9 +27,8 @@ const TextContent = ({ message }) => {
   return <p className="text-sm text-muted-foreground">{message.text}</p>;
 };
 
-const ResultWithSources = ({ messages}) => {
+const ResultWithSources = ({ messages, loading = false }) => {
   const messagesContainerRef = useRef();
-
   useEffect(() => {
     if (messagesContainerRef.current) {
       const element = messagesContainerRef.current;
@@ -36,23 +36,30 @@ const ResultWithSources = ({ messages}) => {
     }
   }, [messages]);
 
-  // E.g. Before we reach the max messages, we should add the justify-end property, which pushes messages to the bottom
-  const maxMsgToScroll =  5;
+  const maxMsgToScroll = 5;
 
   return (
     <div
       ref={messagesContainerRef}
-      className={`bg-white p-10 rounded-3xl shadow-lg mb-8 overflow-y-auto h-[500px] max-h-[500px] flex flex-col space-y-4 ${messages.length < maxMsgToScroll && "justify-end"
-        }`}
+      className={`bg-white p-10 overflow-y-auto flex flex-col space-y-4 ${
+        messages.length < maxMsgToScroll && "justify-end"
+      } chat-container-content`}
     >
       {messages &&
-        messages.map((message, index) =>
-          message.type === "bot" ? (
-            <AssistantChatCard key={index} text={message.text} />
+        messages.map((message, index) => {
+          var latestResponse = index === messages.length - 1;
+          var loadingMessage = latestResponse && loading;
+
+          console.log(latestResponse, index, message, loadingMessage);
+          return message.type === "bot" ? (
+            <AssistantChatCard
+              key={index}
+              text={loadingMessage ? "Loading ..." : message.text}
+            />
           ) : (
             <UserChatCard key={index} text={message.text} />
-          )
-        )}
+          );
+        })}
     </div>
   );
 };

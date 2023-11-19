@@ -2,10 +2,12 @@
   margin-left: 4vw;
   margin-right: 4vw;
   margin-top: 4vh;
+  height: 92vh;
 }
 
 .chat-header-container {
   margin-bottom: 20px;
   display: flex;
   gap: 10px;
+  height: 4vh;
 }

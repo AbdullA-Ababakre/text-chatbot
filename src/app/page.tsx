@@ -5,12 +5,13 @@ import ResultWithSources from "./components/ResultWithSources";
 import PromptBox from "./components/PromptBox";
 import "./globals.css";
 import "./page.css";
-
+1;
 const Home = () => {
-  const [prompt, setPrompt] = useState("What is the myaiclone project?");
+  const [prompt, setPrompt] = useState("");
+  const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
-      text: "Hi, I'm a Abdulla. Founder of the myaiclone. What I can assist you? Can I assist you more ?",
+      text: "Hi, I'm a Abdulla. Founder of the myaiclone. How can i assist you?",
       type: "bot",
     },
   ]);
@@ -20,7 +21,6 @@ const Home = () => {
     setPrompt(e.target.value);
   };
 
-
   const handleSubmitPrompt = async (query: string) => {
     try {
       const userMessage = { type: "user", text: query.trim() };
@@ -28,6 +28,7 @@ const Home = () => {
       setMessages([...messages, userMessage, bottMessage]);
 
       try {
+        setLoading(true);
         fetch(
           "https://us-central1-tablesmart-e4593.cloudfunctions.net/helloWorld?=",
           {
@@ -57,13 +58,14 @@ const Home = () => {
 
               return newMessages;
             });
+            setLoading(false);
           })
           .catch((error: any) => console.error("Error:", error));
       } catch (error: any) {
         console.log("Error from HandleSubmit: ", error);
       }
 
-      setPrompt(query.trim());
+      setPrompt("");
       setError("");
     } catch (error: any) {
       setError(error.message);
@@ -86,16 +88,20 @@ const Home = () => {
           />
           <p>myAiClone</p>
         </div>
-        <ResultWithSources messages={messages} />
+
+        <ResultWithSources loading={loading} messages={messages} />
+
         <PromptBox
           prompt={prompt}
           handlePromptChange={handlePromptChange}
-          handleSubmit={() => handleSubmitPrompt("What is the myaiclone project?")}
+          handleSubmit={() =>
+            handleSubmitPrompt("What is the myaiclone project?")
+          }
           placeHolderText={"What is the myaiclone project?"}
           error={error}
           buttonText={"buttonText"}
           disableButton={true}
-          labelText={"LabelText"}
+          labelText={""}
         />
         <button
           onClick={() =>
@@ -125,6 +131,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
