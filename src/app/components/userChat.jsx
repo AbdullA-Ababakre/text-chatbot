@@ -7,8 +7,8 @@ export function UserChatCard({ text = "", userName = "User" }) {
     <div className="mb-[25px] mr-[25px] mt-[20px] flex items-end justify-end">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>{userName}</CardTitle>
-          <CardDescription>{text}</CardDescription>
+          <CardTitle type="user">{userName}</CardTitle>
+          <CardDescription type="user">{text}</CardDescription>
         </CardHeader>
       </Card>
     </div>

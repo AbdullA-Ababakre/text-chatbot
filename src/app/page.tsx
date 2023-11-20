@@ -76,6 +76,12 @@ const Home = () => {
     handleSubmitPrompt(samplePrompt);
   };
 
+  const recQuestions = [
+    'What are you currently working on?',
+    'Can you please tell me more about MyAiClone?',
+    'What is the pricing of MyAiClone?'
+  ]
+
   return (
     <>
       <div className="chat-container">
@@ -106,25 +112,25 @@ const Home = () => {
         <div className="flex flex-col sm:flex-row gap-4">
           <button
             onClick={() =>
-              handlePromptSampleClick("What are you currently working on?")
+              handlePromptSampleClick(recQuestions[0])
             }
-            className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+            className={`text-left mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
           >
-            What are you currently working on?
+            {recQuestions[0]}
           </button>
 
           <button
-            onClick={() => handlePromptSampleClick("what is your passion?")}
-            className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+            onClick={() => handlePromptSampleClick(recQuestions[1])}
+            className={`text-left mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
           >
-            what is your passion?
+            {recQuestions[1]}
           </button>
 
           <button
-            onClick={() => handlePromptSampleClick("where are you from?")}
-            className={`mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
+            onClick={() => handlePromptSampleClick(recQuestions[2])}
+            className={`text-left mr-3 py-3 px-6 bg-white shadow text-gray-900  rounded hover:shadow-xl transition-colors duration-200`}
           >
-            where are you from?
+            {recQuestions[2]}
           </button>
         </div>
       </div>
