@@ -35,7 +35,7 @@ const CardTitle = React.forwardRef<
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => {
   // @ts-ignore
-  const {type} = props;
+  const { type } = props;
 
   return (
     <div className="flex justify-start">
@@ -70,11 +70,14 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
+  // @ts-ignore
+  const { type } = props;
+
   return (
     <p
       ref={ref}
       className={cn("text-sm text-muted-foreground", {
-        'text-custom-orange': props.type === 'user'
+        'text-custom-orange': type === 'user'
       }, className)}
       {...props}
     />
