@@ -12,12 +12,14 @@ const PromptBox = ({
   error,
   disableButton,
   labelText,
+  handleSchedule
 }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSubmit();
-    }f
+    }
+    f;
   };
 
   const handleVoiceCallClick = () => {
@@ -42,6 +44,10 @@ const PromptBox = ({
     });
   };
 
+  const handleScheduleClick = () => {
+    handleSchedule();
+  };
+
   return (
     <>
       {contextHolder}
@@ -57,6 +63,16 @@ const PromptBox = ({
 
         <div
           className="py-2 px-2 mt-1 bg-white h-full icon-container"
+          onClick={handleScheduleClick}
+        >
+          <img
+            className="icon-logo icon-logo-video"
+            src="/assets/images/schedule.svg"
+          />
+        </div>
+
+        <div
+          className="py-2 px-2 mt-1 bg-white h-full icon-container"
           onClick={handleVideoCallClick}
         >
           <img
@@ -64,6 +80,7 @@ const PromptBox = ({
             src="/assets/images/video-solid.svg"
           />
         </div>
+
         <div
           className="py-2 px-2 mt-1 bg-white h-full icon-container"
           onClick={handleVoiceCallClick}

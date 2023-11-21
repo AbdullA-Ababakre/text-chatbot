@@ -80,7 +80,23 @@ const Home = () => {
     'What are you currently working on?',
     'Can you please tell me more about MyAiClone?',
     'What is the pricing of MyAiClone?'
-  ]
+  ];
+
+  const handleSchedule = () => {
+
+    setMessages((prevMessages) => {
+      const newMessages = [...prevMessages];
+      const lastMessageIndex = newMessages.length;
+
+      newMessages[lastMessageIndex] = {
+        type: 'bot',
+        text: 'There is the meeting schedule',
+      };
+
+      return newMessages;
+    });
+
+  }
 
   return (
     <>
@@ -108,6 +124,7 @@ const Home = () => {
           buttonText={"buttonText"}
           disableButton={true}
           labelText={""}
+          handleSchedule={handleSchedule}
         />
         <div className="flex flex-col sm:flex-row gap-4">
           <button
