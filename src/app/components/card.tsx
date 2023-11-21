@@ -2,7 +2,6 @@ import * as React from "react"
 
 import { cn } from "../../../lib/utils"
 import Image from "next/image";
-import squareImage from '../../../public/assets/images/green-square.png'
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -34,32 +33,37 @@ CardHeader.displayName = "CardHeader"
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <div className="flex justify-start">
-    {
-      props.type === 'bot' && (
-        <>
-          <Image
-            src={'https://z1.ax1x.com/2022/10/23/xgWtXj.jpg'}
-            alt={"bot"}
-            width={32}
-            height={32}
-            className="rounded-full mr-3"
-            priority
-            unoptimized
-          />
-          <div
-            ref={ref}
-            className={cn(
-              "mt-[6px] text-lg font-semibold leading-none tracking-tight",
-              className
-            )}
-            {...props}
-          /></>
-      )
-    }
-  </div>
-))
+>(({ className, ...props }, ref) => {
+  // @ts-ignore
+  const {type} = props;
+
+  return (
+    <div className="flex justify-start">
+      {
+        type === 'bot' && (
+          <>
+            <Image
+              src={'https://z1.ax1x.com/2022/10/23/xgWtXj.jpg'}
+              alt={"bot"}
+              width={32}
+              height={32}
+              className="rounded-full mr-3"
+              priority
+              unoptimized
+            />
+            <div
+              ref={ref}
+              className={cn(
+                "mt-[6px] text-lg font-semibold leading-none tracking-tight",
+                className
+              )}
+              {...props}
+            /></>
+        )
+      }
+    </div>
+  )
+})
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<
