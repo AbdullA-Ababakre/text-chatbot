@@ -83,18 +83,19 @@ const Home = () => {
   ];
 
   const handleSchedule = () => {
+    console.log('clicked schedule')
 
-    setMessages((prevMessages) => {
-      const newMessages = [...prevMessages];
-      const lastMessageIndex = newMessages.length;
+    // setMessages((prevMessages) => {
+    //   const newMessages = [...prevMessages];
+    //   const lastMessageIndex = newMessages.length;
 
-      newMessages[lastMessageIndex] = {
-        type: 'bot',
-        text: 'There is the meeting schedule',
-      };
+    //   newMessages[lastMessageIndex] = {
+    //     type: 'bot',
+    //     text: `[Click here to schedule a time to talk](https://calendly.com/abbdulla)`,
+    //   };
 
-      return newMessages;
-    });
+    //   return newMessages;
+    // });
 
   }
 
