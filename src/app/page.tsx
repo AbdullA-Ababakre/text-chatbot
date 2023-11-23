@@ -1,21 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ResultWithSources from "./components/ResultWithSources";
 import PromptBox from "./components/PromptBox";
 import "./globals.css";
 import "./page.css";
+import { useAuth } from "@clerk/nextjs";
 
 const Home = () => {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
     {
-      text: "Hi, I'm a Abdulla. Founder of the myaiclone. How can i assist you?",
+      text: "Hi, I'm Abdulla. Founder of the myaiclone. How can i assist you?",
       type: "bot",
     },
   ]);
   const [error, setError] = useState("");
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  console.log("1111", useAuth());
 
   const handlePromptChange = (e: any) => {
     setPrompt(e.target.value);
@@ -85,19 +88,27 @@ const Home = () => {
   const handleSchedule = () => {
     console.log('clicked schedule')
 
-    // setMessages((prevMessages) => {
-    //   const newMessages = [...prevMessages];
-    //   const lastMessageIndex = newMessages.length;
+    setMessages((prevMessages) => {
+      const newMessages = [...prevMessages];
+      const lastMessageIndex = newMessages.length;
 
-    //   newMessages[lastMessageIndex] = {
-    //     type: 'bot',
-    //     text: `[Click here to schedule a time to talk](https://calendly.com/abbdulla)`,
-    //   };
+      newMessages[lastMessageIndex] = {
+        type: 'bot',
+        text: `Delighted to connect with you! Beyond chatting with an AI clone, we offer the opportunity for a real conversation. Click here to arrange a meeting where we can discuss more in detail.<a 
+        href="https://calendly.com/abbdulla" 
+        style="color: #007bff; text-decoration: none; font-weight: bold;"
+      >
+        My Calendar Link
+      </a>`,
+      };
 
-    //   return newMessages;
-    // });
+      return newMessages;
+    });
 
   }
+
+  useEffect(() => {
+  }, [messages]);
 
   return (
     <>

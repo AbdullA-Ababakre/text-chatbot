@@ -69,13 +69,13 @@ CardTitle.displayName = "CardTitle"
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => {
-  // @ts-ignore
-  const { type } = props;
+>(({ className, type, children, ...props }, ref) => {
+  const content = typeof children === 'string' ? children : '';
 
   return (
     <p
       ref={ref}
+      dangerouslySetInnerHTML={{ __html: content }}
       className={cn("text-sm text-muted-foreground", {
         'text-custom-orange': type === 'user'
       }, className)}
