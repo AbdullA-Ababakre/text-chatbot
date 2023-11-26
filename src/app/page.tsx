@@ -18,7 +18,6 @@ const Home = () => {
   ]);
   const [error, setError] = useState("");
   const { isLoaded, userId, sessionId, getToken } = useAuth();
-  console.log("1111", useAuth());
 
   const handlePromptChange = (e: any) => {
     setPrompt(e.target.value);
@@ -113,6 +112,7 @@ const Home = () => {
   return (
     <>
       <div className="chat-container">
+
         <div className="chat-header-container">
           <img
             className="chat-icon-logo"
@@ -138,6 +138,7 @@ const Home = () => {
           labelText={""}
           handleSchedule={handleSchedule}
         />
+
         <div className="flex flex-col sm:flex-row gap-4">
           <button
             onClick={() =>
@@ -162,6 +163,7 @@ const Home = () => {
             {recQuestions[2]}
           </button>
         </div>
+
       </div>
     </>
   );
