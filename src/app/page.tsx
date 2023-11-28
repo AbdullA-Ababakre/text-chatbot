@@ -1,11 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { last, toString } from "lodash";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import ResultWithSources from "./components/ResultWithSources";
 import PromptBox from "./components/PromptBox";
 import "./globals.css";
 import "./page.css";
-import { useAuth } from "@clerk/nextjs";
+
+type T_MsgType = "bot" | "user";
+enum E_MsgType {
+  Bot = "bot",
+  User = "user",
+}
+type T_Message = {
+  text: string;
+  type: T_MsgType;
+};
 
 const Home = () => {
   const [prompt, setPrompt] = useState("");
@@ -17,61 +27,102 @@ const Home = () => {
     },
   ]);
   const [error, setError] = useState("");
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const [startSubmit, setStartSubmit] = useState<boolean>(false);
+  const endpoint =
+    "https://us-central1-tablesmart-e4593.cloudfunctions.net/sse";
+  // Create a ref to store the EventSource instance and Create the EventSource when the component mounts
+  const eventSourceRef = useRef<EventSource | null>(null);
 
   const handlePromptChange = (e: any) => {
     setPrompt(e.target.value);
   };
 
+  const processToken = (token: string): string => {
+    return token.replace(/\\n/g, "\n").replace(/\"/g, "");
+  };
+
+
+  const handleClose = useCallback(() => {
+    setStartSubmit(false);
+  }, []);
+
+  const handleError = useCallback(
+    (event: Event) => {
+      const errorEvent = event as Event & { error: DOMException | null };
+      const error = errorEvent.error;
+
+      if (eventSourceRef.current) eventSourceRef.current.close(); // Close the SSE connection on error (optional)
+      setStartSubmit(false);
+      setError(toString(error));
+    },
+    [eventSourceRef]
+  );
+
+  let currentStreamedText = "";
+  const handleNewToken = useCallback((event: MessageEvent) => {
+    const token = processToken(event.data);
+    currentStreamedText = currentStreamedText + token;
+    console.log("currentStream11",currentStreamedText);
+
+  }, []);
+
+
   const handleSubmitPrompt = async (query: string) => {
-    try {
-      const userMessage = { type: "user", text: query.trim() };
-      const bottMessage = { type: "bot", text: "" };
-      setMessages([...messages, userMessage, bottMessage]);
+    setStartSubmit(true);
+    setPrompt("");
 
-      try {
-        setLoading(true);
-        fetch(
-          "https://us-central1-tablesmart-e4593.cloudfunctions.net/helloWorld?=",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              data: {
-                question: query,
-                id: "c586c8e7-3a5d-48dc-9bc4-035060758f35",
-                userId: "abdulla001",
-              },
-            }),
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            setMessages((prevMessages) => {
-              const newMessages = [...prevMessages];
-              const lastMessageIndex = newMessages.length - 1;
+    const userMessage = { type: "user", text: query.trim() };
+    const bottMessage = { type: "bot", text: "" };
+    setMessages([...messages, userMessage, bottMessage]);
 
-              newMessages[lastMessageIndex] = {
-                ...newMessages[lastMessageIndex],
-                text: data.data.answer,
-              };
+    // try {
+    //   const userMessage = { type: "user", text: query.trim() };
+    //   const bottMessage = { type: "bot", text: "" };
+    //   setMessages([...messages, userMessage, bottMessage]);
 
-              return newMessages;
-            });
-            setLoading(false);
-          })
-          .catch((error: any) => console.error("Error:", error));
-      } catch (error: any) {
-        console.log("Error from HandleSubmit: ", error);
-      }
+    //   try {
+    //     setLoading(true);
+    //     fetch(
+    //       "https://us-central1-tablesmart-e4593.cloudfunctions.net/helloWorld?=",
+    //       {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           data: {
+    //             question: query,
+    //             id: "c586c8e7-3a5d-48dc-9bc4-035060758f35",
+    //             userId: "abdulla001",
+    //           },
+    //         }),
+    //       }
+    //     )
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         setMessages((prevMessages) => {
+    //           const newMessages = [...prevMessages];
+    //           const lastMessageIndex = newMessages.length - 1;
 
-      setPrompt("");
-      setError("");
-    } catch (error: any) {
-      setError(error.message);
-    }
+    //           newMessages[lastMessageIndex] = {
+    //             ...newMessages[lastMessageIndex],
+    //             text: data.data.answer,
+    //           };
+
+    //           return newMessages;
+    //         });
+    //         setLoading(false);
+    //       })
+    //       .catch((error: any) => console.error("Error:", error));
+    //   } catch (error: any) {
+    //     console.log("Error from HandleSubmit: ", error);
+    //   }
+
+    //   setPrompt("");
+    //   setError("");
+    // } catch (error: any) {
+    //   setError(error.message);
+    // }
   };
 
   const handlePromptSampleClick = (samplePrompt: string) => {
@@ -85,7 +136,6 @@ const Home = () => {
   ];
 
   const handleSchedule = () => {
-    console.log('clicked schedule')
 
     setMessages((prevMessages) => {
       const newMessages = [...prevMessages];
@@ -107,7 +157,24 @@ const Home = () => {
   }
 
   useEffect(() => {
-  }, [messages]);
+    eventSourceRef.current = new EventSource(endpoint);
+    let eventSource: EventSource = eventSourceRef.current;
+
+    if (startSubmit) {
+      eventSource = new EventSource(endpoint);
+
+      eventSource.addEventListener("newToken", handleNewToken);
+      eventSource.addEventListener("error", handleError);
+      eventSource.addEventListener("close", handleClose);
+      eventSource.addEventListener("end", handleClose);
+    }
+
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+    };
+  }, [startSubmit, handleNewToken, handleError, handleClose]);
 
   return (
     <>
