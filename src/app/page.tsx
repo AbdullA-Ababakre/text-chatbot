@@ -28,101 +28,23 @@ const Home = () => {
   ]);
   const [error, setError] = useState("");
   const [startSubmit, setStartSubmit] = useState<boolean>(false);
+
   const endpoint =
     "https://us-central1-tablesmart-e4593.cloudfunctions.net/sse";
-  // Create a ref to store the EventSource instance and Create the EventSource when the component mounts
-  const eventSourceRef = useRef<EventSource | null>(null);
+  const processToken = (token: string): string => {
+    return token.replace(/\\n/g, "\n").replace(/\"/g, "");
+  };
 
   const handlePromptChange = (e: any) => {
     setPrompt(e.target.value);
   };
 
-  const processToken = (token: string): string => {
-    return token.replace(/\\n/g, "\n").replace(/\"/g, "");
-  };
-
-
-  const handleClose = useCallback(() => {
-    setStartSubmit(false);
-  }, []);
-
-  const handleError = useCallback(
-    (event: Event) => {
-      const errorEvent = event as Event & { error: DOMException | null };
-      const error = errorEvent.error;
-
-      if (eventSourceRef.current) eventSourceRef.current.close(); // Close the SSE connection on error (optional)
-      setStartSubmit(false);
-      setError(toString(error));
-    },
-    [eventSourceRef]
-  );
-
-  let currentStreamedText = "";
-  const handleNewToken = useCallback((event: MessageEvent) => {
-    const token = processToken(event.data);
-    currentStreamedText = currentStreamedText + token;
-    console.log("currentStream11",currentStreamedText);
-
-  }, []);
-
-
   const handleSubmitPrompt = async (query: string) => {
-    setStartSubmit(true);
-    setPrompt("");
-
     const userMessage = { type: "user", text: query.trim() };
     const bottMessage = { type: "bot", text: "" };
     setMessages([...messages, userMessage, bottMessage]);
-
-    // try {
-    //   const userMessage = { type: "user", text: query.trim() };
-    //   const bottMessage = { type: "bot", text: "" };
-    //   setMessages([...messages, userMessage, bottMessage]);
-
-    //   try {
-    //     setLoading(true);
-    //     fetch(
-    //       "https://us-central1-tablesmart-e4593.cloudfunctions.net/helloWorld?=",
-    //       {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //           data: {
-    //             question: query,
-    //             id: "c586c8e7-3a5d-48dc-9bc4-035060758f35",
-    //             userId: "abdulla001",
-    //           },
-    //         }),
-    //       }
-    //     )
-    //       .then((response) => response.json())
-    //       .then((data) => {
-    //         setMessages((prevMessages) => {
-    //           const newMessages = [...prevMessages];
-    //           const lastMessageIndex = newMessages.length - 1;
-
-    //           newMessages[lastMessageIndex] = {
-    //             ...newMessages[lastMessageIndex],
-    //             text: data.data.answer,
-    //           };
-
-    //           return newMessages;
-    //         });
-    //         setLoading(false);
-    //       })
-    //       .catch((error: any) => console.error("Error:", error));
-    //   } catch (error: any) {
-    //     console.log("Error from HandleSubmit: ", error);
-    //   }
-
-    //   setPrompt("");
-    //   setError("");
-    // } catch (error: any) {
-    //   setError(error.message);
-    // }
+    setStartSubmit(true);
+    setPrompt("");
   };
 
   const handlePromptSampleClick = (samplePrompt: string) => {
@@ -156,25 +78,54 @@ const Home = () => {
 
   }
 
+
   useEffect(() => {
-    eventSourceRef.current = new EventSource(endpoint);
-    let eventSource: EventSource = eventSourceRef.current;
+    var eventSource: EventSource;
+    let currentStreamedText = "";
 
     if (startSubmit) {
       eventSource = new EventSource(endpoint);
+      // Event listener for incoming SSE messages
+      eventSource.addEventListener("newToken", (event) => {
+        const token = processToken(event.data);
+        currentStreamedText += token;
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages];
+          const lastMessageIndex = newMessages.length - 1;
 
-      eventSource.addEventListener("newToken", handleNewToken);
-      eventSource.addEventListener("error", handleError);
-      eventSource.addEventListener("close", handleClose);
-      eventSource.addEventListener("end", handleClose);
+          newMessages[lastMessageIndex] = {
+            ...newMessages[lastMessageIndex],
+            text: currentStreamedText,
+          };
+
+          return newMessages;
+        });
+      });
+
+      // Event listener for SSE errors
+      eventSource.addEventListener("error", (error) => {
+        console.error("SSE Error:", error);
+        eventSource.close(); // Close the SSE connection on error (optional)
+        setStartSubmit(false);
+      });
+
+      // Event listener for SSE connection closure
+      eventSource.addEventListener("close", () => {
+        console.log("SSE Connection Closed");
+        setStartSubmit(false);
+      });
+
+      eventSource.addEventListener("end", () => {
+        eventSource.close();
+        setStartSubmit(false);
+      });
     }
 
+    // Cleanup function to close the SSE connection when the component unmounts
     return () => {
-      if (eventSource) {
-        eventSource.close();
-      }
+      if (eventSource) eventSource.close();
     };
-  }, [startSubmit, handleNewToken, handleError, handleClose]);
+  }, [startSubmit]); // Empty dependency array means this effect runs once after the initial render
 
   return (
     <>
