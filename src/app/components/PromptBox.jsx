@@ -19,7 +19,6 @@ const PromptBox = ({
     if (e.key === "Enter") {
       handleSubmit();
     }
-    f;
   };
 
   const handleVoiceCallClick = () => {

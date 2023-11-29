@@ -43,8 +43,8 @@ const Home = () => {
     const userMessage = { type: "user", text: query.trim() };
     const bottMessage = { type: "bot", text: "" };
     setMessages([...messages, userMessage, bottMessage]);
+    setPrompt(query.trim());
     setStartSubmit(true);
-    setPrompt("");
   };
 
   const handlePromptSampleClick = (samplePrompt: string) => {
@@ -58,7 +58,6 @@ const Home = () => {
   ];
 
   const handleSchedule = () => {
-
     setMessages((prevMessages) => {
       const newMessages = [...prevMessages];
       const lastMessageIndex = newMessages.length;
@@ -84,7 +83,7 @@ const Home = () => {
     let currentStreamedText = "";
 
     if (startSubmit) {
-      eventSource = new EventSource(endpoint);
+      eventSource = new EventSource(`${endpoint}?id=${encodeURIComponent('c586c8e7-3a5d-48dc-9bc4-035060758f36')}&question=${encodeURIComponent(prompt)}`);
       // Event listener for incoming SSE messages
       eventSource.addEventListener("newToken", (event) => {
         const token = processToken(event.data);
@@ -101,17 +100,15 @@ const Home = () => {
           return newMessages;
         });
       });
-
+      setPrompt("");
       // Event listener for SSE errors
       eventSource.addEventListener("error", (error) => {
-        console.error("SSE Error:", error);
         eventSource.close(); // Close the SSE connection on error (optional)
         setStartSubmit(false);
       });
 
       // Event listener for SSE connection closure
       eventSource.addEventListener("close", () => {
-        console.log("SSE Connection Closed");
         setStartSubmit(false);
       });
 
@@ -119,6 +116,7 @@ const Home = () => {
         eventSource.close();
         setStartSubmit(false);
       });
+
     }
 
     // Cleanup function to close the SSE connection when the component unmounts
