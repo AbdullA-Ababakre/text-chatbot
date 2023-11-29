@@ -1,7 +1,6 @@
 "use client";
 
-import { last, toString } from "lodash";
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import ResultWithSources from "./components/ResultWithSources";
 import PromptBox from "./components/PromptBox";
 import "./globals.css";
@@ -88,7 +87,7 @@ const Home = () => {
       eventSource.addEventListener("newToken", (event) => {
         const token = processToken(event.data);
         currentStreamedText += token;
-        setMessages((prevMessages) => {
+        setMessages((prevMessages:any) => {
           const newMessages = [...prevMessages];
           const lastMessageIndex = newMessages.length - 1;
 
