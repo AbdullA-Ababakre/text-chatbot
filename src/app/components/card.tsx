@@ -69,6 +69,7 @@ CardTitle.displayName = "CardTitle"
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
+  // @ts-ignore</HTMLParagraphElement>
 >(({ className, type, children, ...props }, ref) => {
   const content = typeof children === 'string' ? children : '';
 
